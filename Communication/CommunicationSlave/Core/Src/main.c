@@ -86,6 +86,9 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  uint8_t txData[2]; // Data to transmit
+  uint8_t rxData[2]; // Store received data
+  int motor1Direction,motor2Direction;
 
   /* USER CODE END Init */
 
@@ -113,11 +116,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  int tdsValue;
-	  int motor1Direction = 0;
-	  int motor2Direction = 0;
+
 	  HAL_ADC_Start(&hadc1); // Start the ADC
+	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  uint32_t adcValue = HAL_ADC_GetValue(&hadc1);
-	  uint16_t actualAdcValue = (uint16_t)(adcValue & 0x0FFF); // 取低12�???
+	  uint16_t actualAdcValue = (uint16_t)(adcValue & 0x0FFF); // 取低12�?????
 	  float voltage = (actualAdcValue / 4095.0) * 3.3; // Assuming 12-bit ADC and 3.3V reference
 
 	  tdsValue = (voltage * 1000) / 2; // Example conversion formula
@@ -126,24 +129,30 @@ int main(void)
 	  // HAL_Delay(1000);
 
 	  // Convert TDS value to 2 bytes
-	  uint8_t txData[2];
+	  uint8_t txData[4];
 	  uint8_t rxData[2] = {0}; // Receive buffer
-	  txData[0] = (tdsValue >> 8) & 0xFF; // High byte
-	  txData[1] = tdsValue & 0xFF;        // Low byte    // Convert TDS value to 2 bytes
+	  txData[3] = (tdsValue >> 8) & 0xFF; // High byte
+	  txData[2] = tdsValue & 0xFF;
+	  txData[1] = (tdsValue >> 16) & 0xFF; // High byte
+	  txData[0] = (tdsValue >> 24) & 0xFF;
+	  // Low byte    // Convert TDS value to 2 bytes
 	  if (HAL_SPI_TransmitReceive(&hspi3, txData, rxData, sizeof(txData), HAL_MAX_DELAY) != HAL_OK)
 	     {
 	            // Handle transmission/reception error
 	            Error_Handler();
 	     }
 	  // Combine received bytes into an integer (if needed)
-	  int receivedValue = (rxData[0] << 8) | rxData[1];
+	  int receivedValue = (rxData[3] << 24) | (rxData[2] << 16) | (rxData[1] << 8) | rxData[1] ;
 
       // Interpret received data
-      int motor1Direction = (int8_t)rxData[0]; // Convert to signed value
-      int motor2Direction = (int8_t)rxData[1];
+      motor1Direction = (int8_t)rxData[0]; // Convert to signed value
+      motor2Direction = (int8_t)rxData[1];
 
       // Control the Directions of two motors.
 
+	    // Combine directions into txData (you can use more sophisticated control here)
+	    txData[0] = motor1Direction;  // Send motor 1 direction
+	    txData[1] = motor2Direction;  // Send motor 2 direction
 	  controlBothMotors(motor1Direction, motor2Direction);
 	  // Debug output (optional)
 
