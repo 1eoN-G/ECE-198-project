@@ -40,8 +40,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-SPI_HandleTypeDef hspi3;
-
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -52,7 +50,6 @@ UART_HandleTypeDef huart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_SPI3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -81,8 +78,8 @@ int main(void)
   /* USER CODE BEGIN Init */
 
   uint8_t txData[2]; // Data to transmit
-  uint8_t rxData[2]; // Store received data
-
+  uint8_t rxData[4]; // Store received data
+  int motor1Direction,motor2Direction;
   char inputChar;
 
   /* USER CODE END Init */
@@ -97,7 +94,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -117,39 +113,40 @@ int main(void)
             case 'w':  // Forward
               motor1Direction = 1;
               motor2Direction = 1;
-              break;
+              //break;
             case 's':  // Backward
               motor1Direction = -1;
               motor2Direction = -1;
-              break;
+              //break;
             case 'a':  // Left
               motor1Direction = -1;
               motor2Direction = 1;
-              break;
+              //break;
             case 'd':  // Right
               motor1Direction = 1;
               motor2Direction = -1;
-              break;
+              //break;
             default:
               motor1Direction = 0;  // Stop
               motor2Direction = 0;  // Stop
-              break;
+              //break;
           }
+        }
 
     // Combine directions into txData (you can use more sophisticated control here)
     txData[0] = motor1Direction;  // Send motor 1 direction
     txData[1] = motor2Direction;  // Send motor 2 direction
 
-    if (HAL_SPI_TransmitReceive(&hspi3, txData, rxData, sizeof(txData), 1000) == HAL_OK)
+    if (HAL_SPI_TransmitReceive(&spi3, txData, rxData, sizeof(txData), 1000) == HAL_OK)
         {
           // Print received data via UART
           HAL_UART_Transmit(&huart2, rxData, sizeof(rxData), 1000);
-          HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 1000); // Line break
+          //HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 1000); // Line break
         }
     else
         {
             // Handle SPI communication error
-            HAL_UART_Transmit(&huart2, (uint8_t*)"SPI Error!\r\n", 12, 1000);
+            //HAL_UART_Transmit(&huart2, (uint8_t*)"SPI Error!\r\n", 12, 1000);
         }
 
 
@@ -205,44 +202,6 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief SPI3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI3_Init(void)
-{
-
-  /* USER CODE BEGIN SPI3_Init 0 */
-
-  /* USER CODE END SPI3_Init 0 */
-
-  /* USER CODE BEGIN SPI3_Init 1 */
-
-  /* USER CODE END SPI3_Init 1 */
-  /* SPI3 parameter configuration*/
-  hspi3.Instance = SPI3;
-  hspi3.Init.Mode = SPI_MODE_MASTER;
-  hspi3.Init.Direction = SPI_DIRECTION_1LINE;
-  hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi3.Init.NSS = SPI_NSS_SOFT;
-  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi3.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI3_Init 2 */
-
-  /* USER CODE END SPI3_Init 2 */
-
-}
-
-/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -258,7 +217,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -307,6 +266,22 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
