@@ -1,0 +1,57 @@
+17:38:13 **** Incremental Build of configuration Debug for project CommunicationSlave ****
+make -j32 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/stm32f4xx_hal_msp.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/stm32f4xx_hal_msp.d" -MT"Core/Src/stm32f4xx_hal_msp.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stm32f4xx_hal_msp.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:159:11: warning: implicit declaration of function 'controlBothMotors' [-Wimplicit-function-declaration]
+  159 |           controlBothMotors(motor1Direction, motor2Direction);
+      |           ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:163:11: warning: implicit declaration of function 'snprintf' [-Wimplicit-function-declaration]
+  163 |           snprintf(buffer, sizeof(buffer), "Sent: %d, Received: %d\r\n", tdsValue, receivedValue);
+      |           ^~~~~~~~
+../Core/Src/main.c:21:1: note: include '<stdio.h>' or provide a declaration of 'snprintf'
+   20 | #include "main.h"
+  +++ |+#include <stdio.h>
+   21 | 
+../Core/Src/main.c:163:11: warning: incompatible implicit declaration of built-in function 'snprintf' [-Wbuiltin-declaration-mismatch]
+  163 |           snprintf(buffer, sizeof(buffer), "Sent: %d, Received: %d\r\n", tdsValue, receivedValue);
+      |           ^~~~~~~~
+../Core/Src/main.c:163:11: note: include '<stdio.h>' or provide a declaration of 'snprintf'
+../Core/Src/main.c:164:57: warning: implicit declaration of function 'strlen' [-Wimplicit-function-declaration]
+  164 |           HAL_UART_Transmit(&huart2, (uint8_t *)buffer, strlen(buffer), HAL_MAX_DELAY);
+      |                                                         ^~~~~~
+../Core/Src/main.c:21:1: note: include '<string.h>' or provide a declaration of 'strlen'
+   20 | #include "main.h"
+  +++ |+#include <string.h>
+   21 | 
+../Core/Src/main.c:164:57: warning: incompatible implicit declaration of built-in function 'strlen' [-Wbuiltin-declaration-mismatch]
+  164 |           HAL_UART_Transmit(&huart2, (uint8_t *)buffer, strlen(buffer), HAL_MAX_DELAY);
+      |                                                         ^~~~~~
+../Core/Src/main.c:164:57: note: include '<string.h>' or provide a declaration of 'strlen'
+../Core/Src/main.c:92:11: warning: unused variable 'rxData' [-Wunused-variable]
+   92 |   uint8_t rxData[2]; // Store received data
+      |           ^~~~~~
+../Core/Src/main.c:91:11: warning: unused variable 'txData' [-Wunused-variable]
+   91 |   uint8_t txData[2]; // Data to transmit
+      |           ^~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:422:6: warning: conflicting types for 'controlBothMotors'; have 'void(int,  int)'
+  422 | void controlBothMotors(int motor1Direction, int motor2Direction)
+      |      ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:159:11: note: previous implicit declaration of 'controlBothMotors' with type 'void(int,  int)'
+  159 |           controlBothMotors(motor1Direction, motor2Direction);
+      |           ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "CommunicationSlave.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\BillL\Desktop\ECE-198-project-main\ECE-198-project-main\Communication\CommunicationSlave\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CommunicationSlave.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: CommunicationSlave.elf
+ 
+arm-none-eabi-size  CommunicationSlave.elf 
+arm-none-eabi-objdump -h -S CommunicationSlave.elf  > "CommunicationSlave.list"
+   text	   data	    bss	    dec	    hex	filename
+  18000	     92	   2204	  20296	   4f48	CommunicationSlave.elf
+Finished building: default.size.stdout
+ 
+Finished building: CommunicationSlave.list
+ 
+
+17:38:14 Build Finished. 0 errors, 8 warnings. (took 1s.336ms)
+

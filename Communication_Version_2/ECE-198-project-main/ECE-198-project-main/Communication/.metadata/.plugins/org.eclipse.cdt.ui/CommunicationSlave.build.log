@@ -1,0 +1,55 @@
+00:31:49 **** Incremental Build of configuration Debug for project CommunicationSlave ****
+make -j32 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:153:11: warning: implicit declaration of function 'memcpy' [-Wimplicit-function-declaration]
+  153 |           memcpy(data, &tdsValue, sizeof(tdsValue)); // �? int 转换为字节数�?
+      |           ^~~~~~
+../Core/Src/main.c:21:1: note: include '<string.h>' or provide a declaration of 'memcpy'
+   20 | #include "main.h"
+  +++ |+#include <string.h>
+   21 | 
+../Core/Src/main.c:153:11: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
+  153 |           memcpy(data, &tdsValue, sizeof(tdsValue)); // �? int 转换为字节数�?
+      |           ^~~~~~
+../Core/Src/main.c:153:11: note: include '<string.h>' or provide a declaration of 'memcpy'
+../Core/Src/main.c:169:11: warning: implicit declaration of function 'snprintf' [-Wimplicit-function-declaration]
+  169 |           snprintf(buffer, sizeof(buffer), "Sent: %d, Received: %d, %d\r\n", tdsValue, motor1Direction,motor2Direction);
+      |           ^~~~~~~~
+../Core/Src/main.c:21:1: note: include '<stdio.h>' or provide a declaration of 'snprintf'
+   20 | #include "main.h"
+  +++ |+#include <stdio.h>
+   21 | 
+../Core/Src/main.c:169:11: warning: incompatible implicit declaration of built-in function 'snprintf' [-Wbuiltin-declaration-mismatch]
+  169 |           snprintf(buffer, sizeof(buffer), "Sent: %d, Received: %d, %d\r\n", tdsValue, motor1Direction,motor2Direction);
+      |           ^~~~~~~~
+../Core/Src/main.c:169:11: note: include '<stdio.h>' or provide a declaration of 'snprintf'
+../Core/Src/main.c:170:57: warning: implicit declaration of function 'strlen' [-Wimplicit-function-declaration]
+  170 |           HAL_UART_Transmit(&huart2, (uint8_t *)buffer, strlen(buffer), HAL_MAX_DELAY);
+      |                                                         ^~~~~~
+../Core/Src/main.c:170:57: note: include '<string.h>' or provide a declaration of 'strlen'
+../Core/Src/main.c:170:57: warning: incompatible implicit declaration of built-in function 'strlen' [-Wbuiltin-declaration-mismatch]
+../Core/Src/main.c:170:57: note: include '<string.h>' or provide a declaration of 'strlen'
+../Core/Src/main.c:136:19: warning: unused variable 'txData' [-Wunused-variable]
+  136 |           uint8_t txData[4];
+      |                   ^~~~~~
+../Core/Src/main.c:93:11: warning: unused variable 'rxData' [-Wunused-variable]
+   93 |   uint8_t rxData[2]; // Store received data
+      |           ^~~~~~
+../Core/Src/main.c:92:11: warning: unused variable 'txData' [-Wunused-variable]
+   92 |   uint8_t txData[2]; // Data to transmit
+      |           ^~~~~~
+arm-none-eabi-gcc -o "CommunicationSlave.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\BillL\Desktop\ECE-198-project-main\ECE-198-project-main\Communication\CommunicationSlave\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CommunicationSlave.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: CommunicationSlave.elf
+ 
+arm-none-eabi-size  CommunicationSlave.elf 
+arm-none-eabi-objdump -h -S CommunicationSlave.elf  > "CommunicationSlave.list"
+   text	   data	    bss	    dec	    hex	filename
+  16808	     92	   2204	  19104	   4aa0	CommunicationSlave.elf
+Finished building: default.size.stdout
+ 
+Finished building: CommunicationSlave.list
+ 
+
+00:31:50 Build Finished. 0 errors, 9 warnings. (took 1s.335ms)
+
