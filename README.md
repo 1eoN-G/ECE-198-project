@@ -2,4 +2,4 @@
 
 ## Created by: Leo Gao, Bill Lu, and Zhuoyan Zhang.
 
-## D Water quanlity detector boat.
+## Design: Water quanlity detector boat.
